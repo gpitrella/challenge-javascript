@@ -33,9 +33,9 @@ const {
 // < 16
 
 function exponencial(exp) {
-
-    return exponencial
-
+    return function (base){
+        return base ** exp;
+    };
 }
 
 // ----- Recursión -----
@@ -71,9 +71,25 @@ function exponencial(exp) {
 // haciendo los movimientos SUR->ESTE->NORTE
 // Aclaraciones: el segundo parametro que recibe la funcion ('direccion') puede ser pasado vacio (null)
 
-function direcciones(laberinto) {
+function direcciones(laberinto, aux = []) {
+   // CONDICION DE CORTE
+  if(laberinto == null) return '';
+      
+   // RESOLUCION  
+  for(const prop in laberinto) {
+    if(laberinto[prop] === 'destino') {
+        aux.push(prop);
+        return aux.join('');
+    };  
+    if(typeof(laberinto[prop]) === 'object') {
+      aux.push(prop);
+      return direcciones(laberinto[prop], aux);
+    };
+  }  
+  return '';
+ }
+//CONFIRMACION
 
-}
 
 
 // EJERCICIO 3
@@ -90,7 +106,21 @@ function direcciones(laberinto) {
 // deepEqualArrays([0,1,[[0,1,2],1,2]], [0,1,[[0,1,2],1,2]]) => true
 
 function deepEqualArrays(arr1, arr2) {
-
+   // Return base 
+    if (arr1.length !== arr2.length) return false;
+    
+    for (let i = 0; i < arr1.length; i++){
+      if(typeof(arr1[i]) !== typeof(arr2[i])){
+        return false;
+      }
+      if(typeof(arr1[i]) === 'object') {
+        return deepEqualArrays(arr1[i], (arr2[i]))
+      }
+      if (arr1[i] !== arr2[i]){
+        return false;
+      }
+    }
+    return true;
 }
 
 
@@ -141,7 +171,26 @@ OrderedLinkedList.prototype.print = function(){
 // < 'head --> 5 --> 3 --> 1 --> null'
 //               4
 OrderedLinkedList.prototype.add = function(val){
-    
+    // Si la lista esta vacia.
+    if(this.head === null) {
+      return this.head = new Node(val);
+    };
+    // Si la lista NO esta vacia    
+    let current = this.head;
+    var pass;
+    if(current.value < val){
+        this.head = new Node(val);
+        return this.head.next = current;
+    } else {
+        while (current.next){   // 6 ---> 4
+          if(current.next.value < val){   // 4  <  5
+            pass = current.next;    // 4
+            current.next = new Node(val);  // creamos 5
+            return current.next.next = pass; 
+          } else current = current.next;
+        }
+      }
+    return current.next = new Node(val);
 }
 
 
@@ -161,6 +210,9 @@ OrderedLinkedList.prototype.add = function(val){
 // < null
 
 OrderedLinkedList.prototype.removeHigher = function(){
+  // Si la lista no tiene nodos
+  if (this.head === null) return null;
+  if(this.head.next === null)  }
     
 }
 
